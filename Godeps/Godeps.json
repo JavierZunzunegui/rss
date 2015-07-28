@@ -1,0 +1,13 @@
+{
+	"ImportPath": "github.com/JavierZunzunegui/rss",
+	"GoVersion": "go1.4.2",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/axgle/mahonia",
+			"Rev": "5dd783869dfe0a7d5a3049b20b8ae1418c5dcc8a"
+		}
+	]
+}
