@@ -107,17 +107,23 @@ func parseRSS2(data []byte, read *db) (*Feed, error) {
 		}
 		next.Read = false
 
-		if _, ok := out.ItemMap[next.ID]; ok {
-			if debug {
-				fmt.Printf("[w] Item %q has duplicate ID.\n", next.Title)
-				fmt.Printf("[w] %#v\n", next)
+		// skip the check if unique Item IDs have been invalidated
+		if !nonUniqueIDs {
+			if _, ok := out.ItemMap[next.ID]; ok {
+				if debug {
+					fmt.Printf("[w] Item %q has duplicate ID.\n", next.Title)
+					fmt.Printf("[w] %#v\n", next)
+				}
+				warnings = true
+				continue
 			}
-			warnings = true
-			continue
 		}
 
 		out.Items = append(out.Items, next)
-		out.ItemMap[next.ID] = struct{}{}
+		// skip the recording if unique Item IDs have been invalidated
+		if !nonUniqueIDs {
+			out.ItemMap[next.ID] = struct{}{}
+		}
 		out.Unread++
 	}
 

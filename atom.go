@@ -64,13 +64,16 @@ func parseAtom(data []byte, read *db) (*Feed, error) {
 		}
 		next.Read = false
 
-		if next.ID == "" {
-			if debug {
-				fmt.Printf("[w] Item %q has no ID and will be ignored.\n", next.Title)
-				fmt.Printf("[w] %#v\n", item)
+		// skip the check if unique Item IDs have been invalidated
+		if !nonUniqueIDs {
+			if next.ID == "" {
+				if debug {
+					fmt.Printf("[w] Item %q has no ID and will be ignored.\n", next.Title)
+					fmt.Printf("[w] %#v\n", item)
+				}
+				warnings = true
+				continue
 			}
-			warnings = true
-			continue
 		}
 
 		if _, ok := out.ItemMap[next.ID]; ok {
@@ -83,7 +86,10 @@ func parseAtom(data []byte, read *db) (*Feed, error) {
 		}
 
 		out.Items = append(out.Items, next)
-		out.ItemMap[next.ID] = struct{}{}
+		// skip the recording if unique Item IDs have been invalidated
+		if !nonUniqueIDs {
+			out.ItemMap[next.ID] = struct{}{}
+		}
 		out.Unread++
 	}
 

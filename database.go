@@ -1,7 +1,10 @@
 package rss
 
-var database *db
-var disabled bool
+var (
+	database     *db
+	disabled     bool
+	nonUniqueIDs bool
+)
 
 func init() {
 	database = NewDB()

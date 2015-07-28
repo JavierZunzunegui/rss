@@ -41,6 +41,12 @@ func CacheParsedItemIDs(flag bool) (didCache bool) {
 	return
 }
 
+func UniqueParsedItemIDs(flag bool) (didUnique bool) {
+	didUnique = !nonUniqueIDs
+	nonUniqueIDs = !flag
+	return
+}
+
 type FetchFunc func() (resp *http.Response, err error)
 
 // Fetch downloads and parses the RSS feed at the given URL
